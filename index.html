@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <script
+      src="https://kit.fontawesome.com/fac7c8adb3.js"
+      crossorigin="anonymous"
+    ></script>
+    <script type="module" src="/src/main.js"></script>
+
+    <title>Data Table</title>
+  </head>
+
+  <body>
+    <div class="container">
+      <header class="header">
+        <!-- Top header -->
+        <div class="header__wrap">
+          <div class="header__wrap-input">
+            <button class="btn-sort">
+              <i class="fa-solid fa-filter"></i>
+            </button>
+
+            <div class="input">
+              <i class="fa-solid fa-magnifying-glass"></i>
+              <input
+                type="search"
+                class="input__search"
+                placeholder="search..."
+              />
+            </div>
+          </div>
+
+          <button class="btn-add">+ Add customer</button>
+        </div>
+
+        <!-- Data header -->
+        <div class="data-header">
+          <div class="data-header__checkbox">
+            <input type="checkbox" class="data-header__checkbox-input" />
+            <div class="data-header__checkbox-icon">
+              #
+              <i class="fa-solid fa-sort"></i>
+            </div>
+          </div>
+
+          <div class="data-header__name">
+            <p>Name</p>
+            <i class="fa-solid fa-sort"></i>
+          </div>
+
+          <p>description</p>
+          <div class="data-header__status">
+            <p>status</p>
+            <i class="fa-solid fa-sort"></i>
+          </div>
+          <p class="data-header__rate">rate</p>
+          <p class="data-header__balance">balance</p>
+          <p class="data-header__deposite">deposite</p>
+        </div>
+      </header>
+
+      <!-- Data body -->
+      <div class="data-body">
+        <div class="data-body__checkbox">
+          <input type="checkbox" class="data-body__checkbox-input" />
+          <div class="data-body__checkbox">
+            <span>1</span>
+          </div>
+        </div>
+
+        <div class="data-body__name">
+          <p>Ann Culhane</p>
+          <span>5684236526</span>
+        </div>
+
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla...</p>
+        <div class="data-body__status">
+          <p>Open</p>
+        </div>
+
+        <div class="data-body__rate">
+          <p>$70.00</p>
+          <span>cad</span>
+        </div>
+
+        <div class="data-body__balance">
+          <p>-$270.00</p>
+          <span>cad</span>
+        </div>
+
+        <div class="data-body__deposite">
+          <p>$500.00</p>
+          <span>cad</span>
+        </div>
+      </div>
+
+      <div class="footer">
+        <div class="pagination-left">
+          <p class="pagination-left-pages">1 - 10 of 97</p>
+        </div>
+
+        <div class="pagination-right">
+          <div class="pagination-right__pages">
+            Rows per page: <span>10</span>
+            <i class="fa-solid fa-chevron-down"></i>
+          </div>
+
+          <div class="pagination-right__pagination">
+            <button class="btn-left">
+              <i class="fa-solid fa-chevron-left"></i>
+            </button>
+            <span>1 - 10</span>
+            <button class="btn-right">
+              <i class="fa-solid fa-chevron-right"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

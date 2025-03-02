@@ -1,0 +1,288 @@
+////////////////////////////////////
+// Grid, Flexbox, sections
+
+.container {
+  width: 1020px;
+  height: 740px;
+  border-radius: 8px;
+  border: 2px solid $color-selected;
+  background-color: $color-parent-bg;
+  box-shadow: 1px 1px 4px rgb(0, 0, 0, 0.15);
+  position: relative;
+}
+
+.header {
+  border-bottom: 1px solid #e9edf5;
+
+  &__wrap {
+    margin: 16px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    &-input {
+      display: flex;
+      align-items: center;
+
+      .input {
+        border-radius: 6px;
+        padding: 6px 12px;
+        color: #a1a9b8;
+        display: flex;
+        align-items: center;
+        border: none;
+        border: 1px solid #e4e2e2;
+        background-color: $color-white;
+        width: 320px;
+
+        .fa-magnifying-glass {
+          color: #868fa0;
+          margin-right: 8px;
+          font-size: 14px;
+        }
+
+        &__search {
+          font-size: 14px;
+          border: none;
+          background-color: $color-white;
+        }
+      }
+    }
+  }
+
+  .data-header {
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    margin: 12px 10px;
+    padding: 12px 0 0 0;
+    display: grid;
+    grid-template-columns: 80px 160px 220px 70px repeat(3, 100px);
+    align-items: center;
+    gap: 20px;
+
+    &__checkbox {
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+
+      &-input {
+        width: 16px;
+        height: 16px;
+        border: none;
+        border: 1px solid #f2eeee;
+        margin-right: 12px;
+        display: flex;
+        align-items: center;
+      }
+
+      &-icon {
+        display: flex;
+        align-items: center;
+      }
+    }
+
+    .fa-sort {
+      cursor: pointer;
+      font-size: 12px;
+      margin-left: 8px;
+    }
+
+    &__name {
+      display: flex;
+      align-items: center;
+    }
+
+    &__status {
+      display: flex;
+      align-items: center;
+    }
+
+    &__rate,
+    &__balance,
+    &__deposite {
+      justify-self: end;
+    }
+  }
+}
+
+///////////////////////////////////////
+// Data Body
+
+.data-body {
+  font-size: 14px;
+  text-transform: uppercase;
+  margin: 12px 10px;
+
+  display: grid;
+  grid-template-columns: 80px 160px 220px 70px repeat(3, 100px);
+  align-items: start;
+  gap: 20px;
+
+  &__checkbox {
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    font-size: 14px;
+    font-weight: 500;
+
+    &-input {
+      width: 16px;
+      height: 16px;
+      border: none;
+      border: 1px solid #f2eeee;
+      margin-right: 12px;
+      display: flex;
+      align-items: center;
+    }
+
+    &-icon {
+      display: flex;
+      align-items: center;
+    }
+  }
+
+  .fa-sort {
+    cursor: pointer;
+    font-size: 12px;
+    margin-left: 8px;
+  }
+
+  &__name {
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+    font-weight: 500;
+    color: #171c26;
+
+    span {
+      font-size: 12px;
+      color: #687182;
+    }
+  }
+
+  &__status {
+    background-color: $color-info-light;
+    padding: 1px 10px;
+    color: $color-info;
+    border-radius: 20px;
+    text-align: center;
+    font-size: 12px;
+  }
+
+  &__rate {
+    text-transform: uppercase;
+    display: flex;
+    flex-direction: column;
+
+    span {
+      color: #687182;
+      font-size: 12px;
+      display: block;
+      margin-left: auto;
+    }
+  }
+
+  &__balance {
+    text-transform: uppercase;
+    display: flex;
+    flex-direction: column;
+    color: $color-negative;
+
+    span {
+      color: #687182;
+      font-size: 12px;
+      display: block;
+      margin-left: auto;
+    }
+  }
+
+  &__deposite {
+    text-transform: uppercase;
+    display: flex;
+    flex-direction: column;
+
+    span {
+      color: #687182;
+      font-size: 12px;
+      display: block;
+      margin-left: auto;
+    }
+  }
+
+  &__rate,
+  &__balance,
+  &__deposite {
+    justify-self: end;
+  }
+}
+
+///////////////////////////////////////
+// Data Footer
+.footer {
+  font-size: 12px;
+  font-weight: 500;
+  position: absolute;
+  color: #687182;
+  bottom: 0;
+  left: 0;
+  display: flex;
+  align-items: center;
+  width: 100%;
+  padding: 12px 20px;
+  background: rgba(255, 255, 255, 0.4);
+  backdrop-filter: blur(15px);
+
+  .pagination-left {
+    margin-right: auto;
+
+    &__pages {
+    }
+  }
+
+  .pagination-right {
+    display: flex;
+    align-items: center;
+
+    &__pages {
+      margin-right: 20px;
+      cursor: pointer;
+    }
+
+    .fa-chevron-down {
+      margin-left: 4px;
+    }
+
+    &__pagination {
+      .btn-left {
+        padding: 7px 10px;
+        border-radius: 8px;
+        border: none;
+        cursor: pointer;
+
+        .fa-chevron-left {
+          width: 6px;
+          height: 3px;
+          color: #868fa0;
+        }
+      }
+
+      .btn-right {
+        padding: 7px 10px;
+        border-radius: 8px;
+        border: none;
+        cursor: pointer;
+
+        .fa-chevron-right {
+          width: 6px;
+          height: 3px;
+          color: #868fa0;
+        }
+      }
+
+      span {
+        margin: 0 10px;
+      }
+    }
+  }
+}

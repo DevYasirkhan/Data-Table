@@ -1,0 +1,74 @@
+////////////////////////////////////////////
+// Font
+@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap');
+
+////////////////////////////////////////////
+// COLOR VARIABLES
+$color-black: #171c26;
+
+$color-primary: #2264e5;
+$color-primary-light: #f0f1fa;
+
+$color-info: #4f5aed;
+$color-info-light: #f0f1fa;
+
+$color-positive: #14804a;
+$color-positive-light: #e1fcef;
+
+$color-negative: #d12953;
+$color-negative-light: #faf0f3;
+
+$color-background: #f7f9fc;
+$color-parent-bg: #f4f7fcbf;
+
+$color-selected: #ebf0fa;
+
+$color-stripes: #f2f5fa;
+
+$color-grey: #464f60;
+$color-grey-light: #e9edf5;
+
+$color-white: #ffffff;
+
+////////////////////////////////////////////
+// FONT VARIABLES
+$font-primary: 'Roboto', sans-serif;
+
+////////////////////////////////////////////
+// RESPONSIVE BREAKPOINTS
+$bp-largest: 1200px;
+$bp-large: 1024px;
+$bp-medium: 992px;
+$bp-small: 768px;
+$bp-smallest: 480px;
+$bp-mini: 320px;
+
+*,
+*::before,
+*::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: inherit;
+}
+
+*:focus {
+  outline: none;
+}
+
+html {
+  box-sizing: border-box;
+}
+
+body {
+  font-family: $font-primary;
+  background-color: $color-background;
+  color: $color-grey;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 1.6;
+  height: 100vh;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
