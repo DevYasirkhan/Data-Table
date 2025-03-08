@@ -9,7 +9,9 @@
       src="https://kit.fontawesome.com/fac7c8adb3.js"
       crossorigin="anonymous"
     ></script>
-    <script type="module" src="/src/main.js"></script>
+    <link rel="stylesheet" href="./src/sass/main.scss" />
+
+    <script type="module" src="/src/dataTable.js"></script>
 
     <title>Data Table</title>
   </head>
@@ -20,9 +22,13 @@
         <!-- Top header -->
         <div class="header__wrap">
           <div class="header__wrap-input">
-            <button class="btn-sort">
-              <i class="fa-solid fa-filter"></i>
-            </button>
+            <select name="" id="" class="header__wrap-filter">
+              <option value="" selected disabled>Filter</option>
+              <option value="20">20</option>
+              <option value="30">30</option>
+              <option value="40">40</option>
+              <option value="50">50</option>
+            </select>
 
             <div class="input">
               <i class="fa-solid fa-magnifying-glass"></i>
@@ -34,7 +40,7 @@
             </div>
           </div>
 
-          <button class="btn-add">+ Add customer</button>
+          <button class="btn-add">Add customer</button>
         </div>
 
         <!-- Data header -->
@@ -42,59 +48,48 @@
           <div class="data-header__checkbox">
             <input type="checkbox" class="data-header__checkbox-input" />
             <div class="data-header__checkbox-icon">
-              #
               <i class="fa-solid fa-sort"></i>
             </div>
           </div>
 
-          <div class="data-header__name">
-            <p>Name</p>
-            <i class="fa-solid fa-sort"></i>
-          </div>
+          <p class="data-header__cell data-header__cell-1">Name</p>
 
-          <p>description</p>
-          <div class="data-header__status">
-            <p>status</p>
-            <i class="fa-solid fa-sort"></i>
-          </div>
-          <p class="data-header__rate">rate</p>
-          <p class="data-header__balance">balance</p>
-          <p class="data-header__deposite">deposite</p>
+          <p class="data-header__cell data-header__cell-2">Location</p>
+          <p class="data-header__cell data-header__cell-3">Age</p>
+          <p class="data-header__cell-4">Description</p>
         </div>
       </header>
 
-      <!-- Data body -->
-      <div class="data-body">
-        <div class="data-body__checkbox">
-          <input type="checkbox" class="data-body__checkbox-input" />
-          <div class="data-body__checkbox">
-            <span>1</span>
+      <!-- Action box -->
+      <div class="action-box">
+        <div class="action-buttons">
+          <button class="btn-edit">
+            <span>Edit</span> <i class="fa-solid fa-pen"></i>
+          </button>
+
+          <button class="btn-delete">
+            <span> Delete</span> <i class="fa-regular fa-trash-can"></i>
+          </button>
+        </div>
+      </div>
+
+      <!-- Data body row -->
+
+      <div class="data-table">
+        <div class="data-row data-row-1">
+          <div class="data-row__checkbox">
+            <input type="checkbox" class="data-row__checkbox-input" />
+            <div class="data-row__checkbox">
+              <span>1</span>
+            </div>
           </div>
-        </div>
 
-        <div class="data-body__name">
-          <p>Ann Culhane</p>
-          <span>5684236526</span>
-        </div>
-
-        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla...</p>
-        <div class="data-body__status">
-          <p>Open</p>
-        </div>
-
-        <div class="data-body__rate">
-          <p>$70.00</p>
-          <span>cad</span>
-        </div>
-
-        <div class="data-body__balance">
-          <p>-$270.00</p>
-          <span>cad</span>
-        </div>
-
-        <div class="data-body__deposite">
-          <p>$500.00</p>
-          <span>cad</span>
+          <p class="data-row__cell data-row__cell-1">Ann Culhane</p>
+          <p class="data-row__cell data-row__cell-2">Location</p>
+          <p class="data-row__cell data-row__cell-3">AGE</p>
+          <p class="data-row__cell data-row__cell-4">
+            Lorem ipsum dolor sit amet, consectetur Nulla...
+          </p>
         </div>
       </div>
 
@@ -104,22 +99,89 @@
         </div>
 
         <div class="pagination-right">
-          <div class="pagination-right__pages">
+          <button class="pagination-right__pages">
             Rows per page: <span>10</span>
             <i class="fa-solid fa-chevron-down"></i>
+          </button>
+
+          <!-- Action -->
+          <div class="per-page-list">
+            <div class="per-page-inner-list">
+              <button>10</button>
+              <button>15</button>
+              <button>20</button>
+              <button>30</button>
+            </div>
           </div>
 
           <div class="pagination-right__pagination">
-            <button class="btn-left">
+            <button class="btn-left" data-index="1">
               <i class="fa-solid fa-chevron-left"></i>
             </button>
-            <span>1 - 10</span>
-            <button class="btn-right">
+            <span>1 - 9</span>
+            <button class="btn-right" data-index="1">
               <i class="fa-solid fa-chevron-right"></i>
             </button>
           </div>
         </div>
       </div>
     </div>
+
+    <!-- Actions -->
+
+    <!-- Form -->
+    <form class="form">
+      <button class="form__close-button">&#10005;</button>
+      <div class="form__group">
+        <label for="ID" class="form__label">ID</label>
+        <input
+          type="text"
+          id="ID"
+          class="form__input form__input-1"
+          placeholder="Enter your name"
+        />
+      </div>
+
+      <div class="form__group">
+        <label for="name" class="form__label">Name</label>
+        <input
+          type="text"
+          id="name"
+          class="form__input form__input-2"
+          placeholder="Enter your name"
+        />
+      </div>
+
+      <div class="form__group">
+        <label for="location" class="form__label">Location</label>
+        <input
+          type="text"
+          id="location"
+          class="form__input form__input-3"
+          placeholder="Enter your location"
+        />
+      </div>
+
+      <div class="form__group">
+        <label for="age" class="form__label">Age</label>
+        <input
+          type="number"
+          id="age"
+          class="form__input form__input-4"
+          placeholder="Enter your age"
+        />
+      </div>
+
+      <div class="form__group">
+        <label for="description" class="form__label">Description</label>
+        <textarea
+          id="description"
+          class="form__input form__textarea form__input-5"
+          placeholder="Enter a description"
+        ></textarea>
+      </div>
+
+      <button type="submit" class="form__button">Add</button>
+    </form>
   </body>
 </html>

@@ -1,18 +1,6 @@
 ////////////////////////////////////
 // Buttons, cards, etc
-.btn-sort {
-  border-radius: 6px;
-  padding: 8px 12px;
-  border: none;
-  border: 1px solid #e4e2e2;
-  background-color: $color-white;
-  margin-right: 16px;
-  cursor: pointer;
-
-  .fa-filter {
-    color: $color-grey;
-  }
-}
+@use 'base' as *;
 
 .btn-add {
   border-radius: 6px;
@@ -22,4 +10,21 @@
   color: $color-white;
   font-size: 14px;
   cursor: pointer;
+  transition: all 0.3s ease;
+
+  &:hover {
+    background-color: #3a58bc;
+  }
+}
+
+.data-header__dots {
+  font-size: 14px;
+  background: none;
+  border: none;
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  right: 10px;
+  cursor: pointer;
+  padding: 4px;
 }

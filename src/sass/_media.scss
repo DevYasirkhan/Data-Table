@@ -1,5 +1,7 @@
 //////////////////////////////////////
 // Media query
+@use 'base' as *;
+
 @media only screen and (max-width: $bp-largest) {
 }
 @media only screen and (max-width: $bp-large) {
