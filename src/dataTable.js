@@ -29,6 +29,8 @@ export class DataTable {
       const data = await response.json();
       this.#data = data;
 
+      console.log(data.map(row => row));
+
       this.renderData(data);
     } catch (error) {
       this.showError(error.message);
