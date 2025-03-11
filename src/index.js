@@ -36,7 +36,7 @@ const perPageList = document.querySelector('.per-page-list');
 
 ////////////////////////////////////////////
 const options = {
-  api: 'http://localhost:3000/',
+  api: 'http://localhost:3000/items',
   pagination: { perPage: 9 },
   columns: [
     { heading: 'ID', accessor: 'id' },

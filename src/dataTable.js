@@ -21,7 +21,7 @@ export class DataTable {
   // Fetch Data
   async fetchData() {
     try {
-      let response = await fetch(`${this.#options.api}items`);
+      let response = await fetch(`${this.#options.api}`);
 
       if (!response.ok)
         throw new Error('Error fetching data. Please try again!');
