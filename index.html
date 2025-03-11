@@ -11,6 +11,7 @@
     ></script>
     <link rel="stylesheet" href="./src/sass/main.scss" />
 
+    <script type="module" src="/src/index.js"></script>
     <script type="module" src="/src/dataTable.js"></script>
 
     <title>Data Table</title>
@@ -42,146 +43,83 @@
 
           <button class="btn-add">Add customer</button>
         </div>
-
-        <!-- Data header -->
-        <div class="data-header">
-          <div class="data-header__checkbox">
-            <input type="checkbox" class="data-header__checkbox-input" />
-            <div class="data-header__checkbox-icon">
-              <i class="fa-solid fa-sort"></i>
-            </div>
-          </div>
-
-          <p class="data-header__cell data-header__cell-1">Name</p>
-
-          <p class="data-header__cell data-header__cell-2">Location</p>
-          <p class="data-header__cell data-header__cell-3">Age</p>
-          <p class="data-header__cell-4">Description</p>
-        </div>
       </header>
 
-      <!-- Action box -->
-      <div class="action-box">
-        <div class="action-buttons">
-          <button class="btn-edit">
-            <span>Edit</span> <i class="fa-solid fa-pen"></i>
-          </button>
+      <!-- Table -->
+      <table class="table">
+        <!-- Table head -->
+        <!--  <thead class="table-head">
+          <tr class="table-head__row">
+            <th class="table-head__column table-head__column-1">
+              <input type="checkbox" class="table-head__checkbox" />
+              <i class="fa-solid fa-sort"></i>
+            </th>
+            <th class="table-head__column table-head__column-2">
+              <span>Name</span>
+              <i class="fa-solid fa-sort"></i>
+            </th>
 
-          <button class="btn-delete">
-            <span> Delete</span> <i class="fa-regular fa-trash-can"></i>
-          </button>
-        </div>
-      </div>
+            <th class="table-head__column table-head__column-3">
+              <span>Location</span>
+              <i class="fa-solid fa-sort"></i>
+            </th>
+            <th class="table-head__column table-head__column-4">
+              <span>Age</span> <i class="fa-solid fa-sort"></i>
+            </th>
+            <th class="table-head__column table-head__column-5">
+              <span>Description</span>
+              <i class="fa-solid fa-sort"></i>
+            </th>
+          </tr>
+        </thead>
 
-      <!-- Data body row -->
-
-      <div class="data-table">
-        <div class="data-row data-row-1">
-          <div class="data-row__checkbox">
-            <input type="checkbox" class="data-row__checkbox-input" />
-            <div class="data-row__checkbox">
+        <tbody class="table-body">
+          <tr class="table-body__row">
+            <td class="table-body__column table-body__column-1">
+              <input type="checkbox" class="table-body__checkbox" />
               <span>1</span>
-            </div>
-          </div>
+            </td>
+            <td class="table-body__column table-body__column-2">Ann Culhane</td>
+            <td class="table-body__column table-body__column-3">Location</td>
+            <td class="table-body__column table-body__column-4">Age</td>
+            <td class="table-body__column table-body__column-5">
+              Lorem ipsum dolor sit amet, consectetur Nulla...
+            </td>
+          </tr>
+        </tbody>
 
-          <p class="data-row__cell data-row__cell-1">Ann Culhane</p>
-          <p class="data-row__cell data-row__cell-2">Location</p>
-          <p class="data-row__cell data-row__cell-3">AGE</p>
-          <p class="data-row__cell data-row__cell-4">
-            Lorem ipsum dolor sit amet, consectetur Nulla...
-          </p>
-        </div>
-      </div>
+        <tfoot class="table-foot">
+          <tr class="table-foot__row">
+            <td class="table-foot__left-pages">1 - 10 of 97</td>
 
-      <div class="footer">
-        <div class="pagination-left">
-          <p class="pagination-left-pages">1 - 10 of 97</p>
-        </div>
+            <td class="table-foot__right">
+              <button class="btn-dropdown">
+                Rows per page: <span>10</span>
+                <i class="fa-solid fa-chevron-down"></i>
+              </button>
 
-        <div class="pagination-right">
-          <button class="pagination-right__pages">
-            Rows per page: <span>10</span>
-            <i class="fa-solid fa-chevron-down"></i>
-          </button>
+              <div class="table-foot__right-list">
+                <div class="table-foot__right-inner-list">
+                  <button>9</button>
+                  <button>15</button>
+                  <button>20</button>
+                  <button>25</button>
+                </div>
+              </div>
 
-          <!-- Action -->
-          <div class="per-page-list">
-            <div class="per-page-inner-list">
-              <button>10</button>
-              <button>15</button>
-              <button>20</button>
-              <button>30</button>
-            </div>
-          </div>
-
-          <div class="pagination-right__pagination">
-            <button class="btn-left" data-index="1">
-              <i class="fa-solid fa-chevron-left"></i>
-            </button>
-            <span>1 - 9</span>
-            <button class="btn-right" data-index="1">
-              <i class="fa-solid fa-chevron-right"></i>
-            </button>
-          </div>
-        </div>
-      </div>
+              <div class="table-foot__right-pages">
+                <button class="btn-left" data-index="1">
+                  <i class="fa-solid fa-chevron-left"></i>
+                </button>
+                <span>1 - 9</span>
+                <button class="btn-right" data-index="1">
+                  <i class="fa-solid fa-chevron-right"></i>
+                </button>
+              </div>
+            </td>
+          </tr>
+        </tfoot> -->
+      </table>
     </div>
-
-    <!-- Actions -->
-
-    <!-- Form -->
-    <form class="form">
-      <button class="form__close-button">&#10005;</button>
-      <div class="form__group">
-        <label for="ID" class="form__label">ID</label>
-        <input
-          type="text"
-          id="ID"
-          class="form__input form__input-1"
-          placeholder="Enter your name"
-        />
-      </div>
-
-      <div class="form__group">
-        <label for="name" class="form__label">Name</label>
-        <input
-          type="text"
-          id="name"
-          class="form__input form__input-2"
-          placeholder="Enter your name"
-        />
-      </div>
-
-      <div class="form__group">
-        <label for="location" class="form__label">Location</label>
-        <input
-          type="text"
-          id="location"
-          class="form__input form__input-3"
-          placeholder="Enter your location"
-        />
-      </div>
-
-      <div class="form__group">
-        <label for="age" class="form__label">Age</label>
-        <input
-          type="number"
-          id="age"
-          class="form__input form__input-4"
-          placeholder="Enter your age"
-        />
-      </div>
-
-      <div class="form__group">
-        <label for="description" class="form__label">Description</label>
-        <textarea
-          id="description"
-          class="form__input form__textarea form__input-5"
-          placeholder="Enter a description"
-        ></textarea>
-      </div>
-
-      <button type="submit" class="form__button">Add</button>
-    </form>
   </body>
 </html>

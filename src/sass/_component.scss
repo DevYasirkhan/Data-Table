@@ -17,14 +17,40 @@
   }
 }
 
-.data-header__dots {
-  font-size: 14px;
+.btn-dropdown {
   background: none;
   border: none;
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  right: 10px;
+  color: inherit;
+  margin-right: 20px;
   cursor: pointer;
-  padding: 4px;
+
+  .fa-chevron-down {
+    margin-left: 4px;
+  }
+}
+
+.btn-left {
+  padding: 7px 10px;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+
+  .fa-chevron-left {
+    width: 6px;
+    height: 3px;
+    color: #868fa0;
+  }
+}
+
+.btn-right {
+  padding: 7px 10px;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+
+  .fa-chevron-right {
+    width: 6px;
+    height: 3px;
+    color: #868fa0;
+  }
 }
