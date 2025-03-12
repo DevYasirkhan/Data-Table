@@ -2,8 +2,8 @@
 // Class
 
 export class DataTable {
-  #options = null;
-  #data = [];
+  options = null;
+  data = [];
   // #totalData = [];
   // #currentPage = 1;
   // #totalItems = 0;
@@ -13,7 +13,7 @@ export class DataTable {
 
   constructor(selector, options) {
     this.table = document.querySelector(selector);
-    this.#options = options;
+    this.options = options;
 
     this.fetchData();
   }
@@ -21,15 +21,12 @@ export class DataTable {
   // Fetch Data
   async fetchData() {
     try {
-      let response = await fetch(`${this.#options.api}`);
+      let response = await fetch(`${this.options.api}`);
 
-      if (!response.ok)
-        throw new Error('Error fetching data. Please try again!');
+      if (!response.ok) throw new Error('Data not fetched. Please try again!');
 
       const data = await response.json();
-      this.#data = data;
-
-      console.log(data.map(row => row));
+      this.data = data;
 
       this.renderData(data);
     } catch (error) {
@@ -42,7 +39,7 @@ export class DataTable {
     const tableBody = this.table;
     tableBody.innerHTML = '';
 
-    if (!data.length) return;
+    if (!data) return;
 
     const html = `
          <thead class="table-head">
@@ -51,7 +48,7 @@ export class DataTable {
               <input type="checkbox" class="table-head__checkbox" />
               <i class="fa-solid fa-sort"></i>
             </th>
-            ${this.#options.columns
+            ${this.options.columns
               .slice(1, -1)
               .map(
                 (col, i) => `    
@@ -71,9 +68,9 @@ export class DataTable {
           <tr class="table-body__row" data-id="${row.id}">
             <td class="table-body__column table-body__column-1">
               <input type="checkbox" class="table-body__checkbox" />
-              <span>${rowIndex + 1}</span>
+              <span>${row.id}</span>
             </td>
-            ${this.#options.columns
+            ${this.options.columns
               .slice(1)
               .map(
                 (col, colIndex) =>
@@ -122,9 +119,11 @@ export class DataTable {
               </div>
             </td>
           </tr>
-        </tfoot>`;
-
+        </tfoot>
+        `;
     tableBody.insertAdjacentHTML('beforeend', html);
+
+    window.deleteRow = id => this.deleteRow(id);
   }
 
   /*
@@ -138,11 +137,11 @@ export class DataTable {
         return;
       }
 
-      const response = await fetch(`${this.#options.api}items?q=${keyWord}`);
+      const response = await fetch(`${this.options.api}items?q=${keyWord}`);
 
       if (!response.ok) throw new Error('Error fetching item');
 
-      this.#data = await response.json();
+      this.data = await response.json();
 
       this.renderData();
     } catch (error) {
@@ -174,7 +173,7 @@ export class DataTable {
             description: description.value.trim(),
           };
 
-          const response = await fetch(`${this.#options.api}items`, {
+          const response = await fetch(`${this.options.api}items`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(addNewData),
@@ -208,7 +207,7 @@ export class DataTable {
 
       if (!target) return;
 
-      const perPage = this.#options.pagination.perPage;
+      const perPage = this.options.pagination.perPage;
       const totalPages = Math.ceil(this.#totalItems / perPage);
 
       if (
@@ -234,7 +233,7 @@ export class DataTable {
   /*
   // UpdatePagination
   updatePagination() {
-    const perPage = this.#options.pagination.perPage;
+    const perPage = this.options.pagination.perPage;
     const start = (this.#currentPage - 1) * perPage + 1;
     let end = this.#currentPage * perPage;
 
@@ -261,7 +260,7 @@ export class DataTable {
     perPageList.addEventListener('click', e => {
       const pageNum = +e.target.closest('button').textContent;
 
-      this.#options.pagination.perPage = pageNum;
+      this.options.pagination.perPage = pageNum;
 
       this.fetchData();
       perPageList.classList.remove('active');
@@ -334,7 +333,7 @@ export class DataTable {
         description: description.value.trim(),
       };
 
-      const response = await fetch(`${this.#options.api}items/${dataIndex}`, {
+      const response = await fetch(`${this.options.api}items/${dataIndex}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(updatedData),
@@ -349,26 +348,32 @@ export class DataTable {
   }
 */
 
-  /*
-  // // Delete Row
-  async deleteRow(target = false) {
+  // Delete Row
+  async deleteRow(id) {
     try {
-      if (target) {
-        const dataRow = target;
-        const dataIndex = +dataRow?.dataset.index;
+      console.log(id);
+      await fetch(`${this.options.api}/${id}`, {
+        method: 'DELETE',
+      });
 
-        await fetch(`${this.#options.api}items/${dataIndex}`, {
+      this.fetchData();
+    } catch (error) {
+      this.showError(error.message);
+    }
+  }
+
+  // Clear All Rows
+  async clearAll() {
+    try {
+      for (const item of this.data) {
+        const response = await fetch(`${this.options.api}/${item.id}`, {
           method: 'DELETE',
         });
-      } else {
-        headerCheckbox.checked = false;
-        actionBox.style.display = 'none';
 
-        for (const item of this.#data) {
-          await fetch(`${this.#options.api}items/${item.id}`, {
-            method: 'DELETE',
-          });
-        }
+        if (!response.ok)
+          throw new Error('Data not deleted: please try again!');
+
+        console.log(response);
       }
 
       this.fetchData();
@@ -376,7 +381,6 @@ export class DataTable {
       this.showError(error.message);
     }
   }
- */
 
   // Error message
   showError(error) {

@@ -141,21 +141,6 @@
       font-weight: 500;
       color: #171c26;
     }
-
-    &__column-6 > button {
-      font-size: 14px;
-      padding: 2px;
-      border: none;
-      background: none;
-      border: 1px solid $color-parent-bg;
-      box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
-      cursor: pointer;
-    }
-
-    &__column-6 :nth-child(2) {
-      background-color: $color-negative;
-      color: $color-white;
-    }
   }
 
   .table-body > :nth-child(odd) {
@@ -235,100 +220,6 @@
   }
 }
 ///////////////////////////////////////
-// Actions
-
-// .per-page-list {
-//   background-color: $color-white;
-
-//   box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.15);
-//   border-radius: 4px;
-//   padding: 0 4px;
-
-//   position: absolute;
-//   left: 70px;
-//   top: 30px;
-//   transition: opacity 0.3s ease, transform 0.3s ease;
-//   transform: translateY(-10px);
-//   opacity: 0;
-// }
-
-// .per-page-list.active {
-//   opacity: 1;
-//   transform: translateY(0);
-// }
-
-// .per-page-inner-list {
-//   display: flex;
-//   flex-direction: column;
-//   align-items: center;
-// }
-
-// .per-page-list button {
-//   padding: 6px 10px;
-//   font-weight: 500;
-//   background: none;
-//   border: none;
-//   border-radius: 4px;
-//   cursor: pointer;
-//   width: 100%;
-// }
-
-// .per-page-list button:hover {
-//   background-color: $color-primary;
-//   color: $color-white;
-// }
-
-// Action button box
-.action-box {
-  background-color: $color-white;
-  position: absolute;
-  top: 14%;
-  right: -9.5%;
-  border-radius: 2px;
-  cursor: pointer;
-  display: none;
-  box-shadow: 0 0 6px rgba(0, 0, 0, 0.15);
-}
-
-.action-buttons {
-  display: flex;
-  flex-direction: column;
-}
-
-.btn-edit,
-.btn-delete {
-  font-size: 14px;
-  font-weight: 500;
-  padding: 8px 10px;
-  border: none;
-  background: none;
-  cursor: pointer;
-
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-
-.btn-edit:hover,
-.btn-delete:hover {
-  background-color: $color-parent-bg;
-}
-
-.btn-edit > span,
-.btn-delete > span {
-  margin-right: 15px;
-}
-
-.btn-edit,
-.fa-pen {
-  color: $color-primary;
-}
-
-.btn-delete,
-.fa-trash-can {
-  color: $color-negative;
-}
-
 .message {
   font-size: 14px;
   font-weight: 500;
@@ -337,6 +228,45 @@
   left: 50%;
   transform: translate(-50%, -50%);
   background-color: #f4f7fcbf !important;
+}
+
+///////////////////////////////////////
+// Clear All box
+.popup-clear {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  padding: 10px;
+  width: 180px;
+  max-height: 100px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+
+  background-color: $color-white;
+  box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.15);
+  transform: translate(-50%, -50%);
+  border-radius: 8px;
+  text-align: center;
+
+  span {
+    font-size: 14px;
+    font-weight: 500;
+    display: block;
+    margin-top: 10px;
+    margin-bottom: 40px;
+  }
+
+  &__box {
+    width: 100%;
+    position: absolute;
+    top: 60%;
+    left: 50%;
+    transform: translatex(-50%);
+    display: flex;
+    align-items: end;
+    justify-content: space-around;
+  }
 }
 
 ///////////////////////////////////////
