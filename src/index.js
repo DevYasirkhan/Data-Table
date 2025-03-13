@@ -6,25 +6,14 @@ import { DataTable } from './dataTable.js';
 
 ////////////////////////////////////////////
 // Selector
+const tableBox = document.querySelector('.table');
 const popup = document.querySelector('.popup-clear');
-
 /*
-const dataTable = document.querySelector('.data-table');
 const filter = document.querySelector('.header__wrap-filter');
 const searchInput = document.querySelector('.input__search');
 const btnAddCustomer = document.querySelector('.btn-add');
 const btnSort = document.querySelector('.fa-sort');
 
-const actionBox = document.querySelector('.action-box');
-const btnEdit = document.querySelector('.btn-edit');
-const btndelete = document.querySelector('.btn-delete');
-
-// Pagination
-const footer = document.querySelector('.footer');
-const paginationRightPerPage = document.querySelector(
-  '.pagination-right__pages'
-);
-const perPageList = document.querySelector('.per-page-list');
 */
 
 ////////////////////////////////////////////
@@ -41,7 +30,7 @@ const options = {
       heading: 'Actions',
       customCell: row => `
           <button onclick="editRow(${row.id})" class="btn-edit">Edit</button>
-          <button onclick="deleteRow(${row.id})" class="btn-delete">Delete</button>
+          <button class="btn-delete" data-id="${row.id}">Delete</button>
         `,
     },
   ],
@@ -50,9 +39,11 @@ const options = {
 const table = new DataTable('.table', options);
 console.log(table);
 
+////////////////////////////////////////////
 // AdEventListener
+
 let popupHandler;
-document.addEventListener('click', function (e) {
+tableBox.addEventListener('click', function (e) {
   const target = e.target;
 
   if (target.classList.contains('table-head__checkbox')) {
@@ -63,7 +54,7 @@ document.addEventListener('click', function (e) {
 
     popupHandler = e => {
       if (e.target.classList.contains('btn-clear')) {
-        table.clearAll();
+        table.deleteRow();
       }
       popup.style.opacity = 0;
       popup.style.pointerEvents = 'none';
@@ -72,18 +63,12 @@ document.addEventListener('click', function (e) {
 
     popup.addEventListener('click', popupHandler);
   }
-});
 
-/*
-window.addEventListener('DOMContentLoaded', table.fetchData.bind(this));
-filter.addEventListener('change', this.filterData.bind(this));
-btnAddCustomer.addEventListener('click', this.addCustomer.bind(this));
-searchInput.addEventListener('input', this.searchData.bind(this));
-btnSort.addEventListener('click', this.sortData.bind(this));
-dataTable.addEventListener('click', this.action.bind(this));
-footer.addEventListener('click', this.pagination.bind(this));
-paginationRightPerPage.addEventListener('click', this.dropDown.bind(this));
-*/
+  if (target.classList.contains('btn-delete')) {
+    const id = +target.dataset.id;
+    table.deleteRow(id);
+  }
+});
 
 /* 
 data for data.json

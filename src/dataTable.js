@@ -27,6 +27,7 @@ export class DataTable {
 
       const data = await response.json();
       this.data = data;
+      console.log(data);
 
       this.renderData(data);
     } catch (error) {
@@ -39,7 +40,9 @@ export class DataTable {
     const tableBody = this.table;
     tableBody.innerHTML = '';
 
+    console.log(!data);
     if (!data) return;
+    console.log(data);
 
     const html = `
          <thead class="table-head">
@@ -122,8 +125,6 @@ export class DataTable {
         </tfoot>
         `;
     tableBody.insertAdjacentHTML('beforeend', html);
-
-    window.deleteRow = id => this.deleteRow(id);
   }
 
   /*
@@ -351,32 +352,31 @@ export class DataTable {
   // Delete Row
   async deleteRow(id) {
     try {
-      console.log(id);
-      await fetch(`${this.options.api}/${id}`, {
-        method: 'DELETE',
-      });
-
-      this.fetchData();
-    } catch (error) {
-      this.showError(error.message);
-    }
-  }
-
-  // Clear All Rows
-  async clearAll() {
-    try {
-      for (const item of this.data) {
-        const response = await fetch(`${this.options.api}/${item.id}`, {
+      if (id) {
+        await fetch(`${this.options.api}/${id}`, {
           method: 'DELETE',
         });
+      } else {
+        const itemsId = this.data.map(item => item.id);
 
-        if (!response.ok)
-          throw new Error('Data not deleted: please try again!');
+        itemsId.forEach(id => console.log(`${this.options.api}/${id}`));
 
-        console.log(response);
+        // debugger;
+        const promise = itemsId.map(Id =>
+          fetch(`${this.options.api}/${Id}`, {
+            method: 'DELETE',
+          })
+        );
+        console.log(promise);
+
+        const result = await Promise.all(promise);
+        console.log(result);
+
+        // if (result.filter(res => !res.value.ok))
+        //   throw new Error('Failed to delete some items: try again');
       }
 
-      this.fetchData();
+      await this.fetchData();
     } catch (error) {
       this.showError(error.message);
     }
