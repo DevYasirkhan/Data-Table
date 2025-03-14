@@ -104,6 +104,41 @@
       "location": "Chicago",
       "age": 24,
       "description": "Lorem ipsum dolor sit amet"
+    },
+    {
+      "id": 16,
+      "name": "Orion",
+      "location": "New York",
+      "age": 30,
+      "description": "Consectetur adipiscing elit"
+    },
+    {
+      "id": 17,
+      "name": "Nova",
+      "location": "Los Angeles",
+      "age": 27,
+      "description": "Sed do eiusmod tempor incididunt"
+    },
+    {
+      "id": 18,
+      "name": "Vega",
+      "location": "Houston",
+      "age": 22,
+      "description": "Ut labore et dolore magna aliqua"
+    },
+    {
+      "id": 19,
+      "name": "Sirius",
+      "location": "Miami",
+      "age": 29,
+      "description": "Ut enim ad minim veniam"
+    },
+    {
+      "id": 20,
+      "name": "Altair",
+      "location": "San Francisco",
+      "age": 26,
+      "description": "Duis aute irure dolor in reprehenderit"
     }
   ]
 }

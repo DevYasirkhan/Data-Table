@@ -4,18 +4,21 @@
 export class DataTable {
   options = null;
   data = [];
-  // #totalData = [];
-  // #currentPage = 1;
-  // #totalItems = 0;
-  // #isFiltering = false;
-  // #filteredQuery = '';
-  // #sortOrder = null;
+  #currentPage = 1;
+  #totalItems = 0;
+  #PerPageStart = 0;
+  #perPageEnd = 0;
+  #isFiltering = false;
+  #filteredQuery = '';
+  #sortOrder = null;
 
   constructor(selector, options) {
     this.table = document.querySelector(selector);
     this.options = options;
 
     this.fetchData();
+    this.fetchPaginateData();
+    this.table.addEventListener('click', this.pagination.bind(this));
   }
 
   // Fetch Data
@@ -27,10 +30,29 @@ export class DataTable {
 
       const data = await response.json();
       this.data = data;
-      console.log(data);
+      this.#totalItems = data.length;
+    } catch (error) {
+      this.showError(error.message);
+    }
+  }
 
+  // Fetch paginate Data
+  async fetchPaginateData() {
+    try {
+      const response = await fetch(
+        `${this.options.api}?_page=${this.#currentPage}&_limit=${
+          this.options.pagination.perPage
+        }`
+      );
+
+      if (!response.ok) throw new Error('Data not fetched. Please try again!');
+
+      const data = await response.json();
+
+      this.updatePagination();
       this.renderData(data);
     } catch (error) {
+      console.log(error.message);
       this.showError(error.message);
     }
   }
@@ -40,9 +62,7 @@ export class DataTable {
     const tableBody = this.table;
     tableBody.innerHTML = '';
 
-    console.log(!data);
     if (!data) return;
-    console.log(data);
 
     const html = `
          <thead class="table-head">
@@ -93,7 +113,9 @@ export class DataTable {
 
         <tfoot class="table-foot">
           <tr class="table-foot__row">
-            <td class="table-foot__left-pages">1 - 10 of 97</td>
+            <td class="table-foot__left-pages">${this.#PerPageStart} - ${
+      this.#perPageEnd
+    } of ${this.#totalItems}</td>
 
             <td class="table-foot__right">
               <button class="btn-dropdown">
@@ -115,7 +137,7 @@ export class DataTable {
                 <button class="btn-left" data-index="1">
                   <i class="fa-solid fa-chevron-left"></i>
                 </button>
-                <span>1 - 9</span>
+                <span>${this.#PerPageStart} - ${this.#perPageEnd}</span>
                 <button class="btn-right" data-index="1">
                   <i class="fa-solid fa-chevron-right"></i>
                 </button>
@@ -199,56 +221,42 @@ export class DataTable {
   }
  */
 
-  /*
-   // Pagination Data
+  // Pagination Data
   async pagination(e) {
     try {
-      const target =
-        e.target.closest('.btn-right') || e.target.closest('.btn-left');
+      const target = e.target.closest('.btn-right, .btn-left');
 
       if (!target) return;
 
       const perPage = this.options.pagination.perPage;
-      const totalPages = Math.ceil(this.#totalItems / perPage);
+      const totalPages = Math.ceil(this.data.length / perPage);
 
       if (
         target.classList.contains('btn-right') &&
         this.#currentPage < totalPages
       ) {
         this.#currentPage++;
-      } else if (
-        target.classList.contains('btn-left') &&
-        this.#currentPage > 1
-      ) {
+      }
+      if (target.classList.contains('btn-left') && this.#currentPage > 1) {
         this.#currentPage--;
       }
 
-      this.fetchData();
-      this.#updatePagination();
+      this.fetchPaginateData();
+      this.updatePagination();
     } catch (error) {
       this.showError(error.message);
     }
   }
-  */
 
-  /*
   // UpdatePagination
   updatePagination() {
     const perPage = this.options.pagination.perPage;
     const start = (this.#currentPage - 1) * perPage + 1;
     let end = this.#currentPage * perPage;
 
-    if (end > this.#totalItems) end = this.#totalItems;
-
-    footer.querySelector(
-      '.pagination-left-pages'
-    ).textContent = `${start} - ${end} of ${this.#totalItems}`;
-
-    footer.querySelector(
-      '.pagination-right__pagination span'
-    ).textContent = `${start} - ${end}`;
+    this.#PerPageStart = start;
+    this.#perPageEnd = end;
   }
-  */
 
   /*
   // DropDown
@@ -350,35 +358,35 @@ export class DataTable {
 */
 
   // Delete Row
-  async deleteRow(id) {
+  async deleteRow(id, skipFetch = false) {
     try {
-      if (id) {
-        await fetch(`${this.options.api}/${id}`, {
-          method: 'DELETE',
-        });
-      } else {
-        const itemsId = this.data.map(item => item.id);
+      const response = await fetch(`${this.options.api}/${id}`, {
+        method: 'DELETE',
+      });
 
-        itemsId.forEach(id => console.log(`${this.options.api}/${id}`));
+      if (!response.ok)
+        throw new Error('failed to delete items. Please try again');
 
-        // debugger;
-        const promise = itemsId.map(Id =>
-          fetch(`${this.options.api}/${Id}`, {
-            method: 'DELETE',
-          })
-        );
-        console.log(promise);
-
-        const result = await Promise.all(promise);
-        console.log(result);
-
-        // if (result.filter(res => !res.value.ok))
-        //   throw new Error('Failed to delete some items: try again');
+      if (!skipFetch) {
+        await this.fetchPaginateData();
       }
-
-      await this.fetchData();
     } catch (error) {
       this.showError(error.message);
+    }
+  }
+
+  // Clear All Rows
+  async clearAll() {
+    try {
+      const itemsId = this.data.map(item => item.id);
+
+      const result = await Promise.all(
+        itemsId.map(id => this.deleteRow(id, true))
+      );
+
+      this.fetchPaginateData();
+    } catch (error) {
+      console.log(error.message);
     }
   }
 

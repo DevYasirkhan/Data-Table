@@ -19,7 +19,7 @@ const btnSort = document.querySelector('.fa-sort');
 ////////////////////////////////////////////
 const options = {
   api: 'http://localhost:3000/items',
-  pagination: { perPage: 9 },
+  pagination: { perPage: 10 },
   columns: [
     { heading: 'ID', accessor: 'id' },
     { heading: 'Name', accessor: 'name' },
@@ -54,7 +54,7 @@ tableBox.addEventListener('click', function (e) {
 
     popupHandler = e => {
       if (e.target.classList.contains('btn-clear')) {
-        table.deleteRow();
+        table.clearAll();
       }
       popup.style.opacity = 0;
       popup.style.pointerEvents = 'none';
@@ -70,9 +70,10 @@ tableBox.addEventListener('click', function (e) {
   }
 });
 
+////////////////////////////////////////////
 /* 
-data for data.json
-{
+   data for data.json
+     {
       "id": 1,
       "name": "Jack Thompson",
       "location": "China",
@@ -176,5 +177,40 @@ data for data.json
       "location": "Chicago",
       "age": 24,
       "description": "Lorem ipsum dolor sit amet"
+    },
+    {
+      "id": 16,
+      "name": "Orion",
+      "location": "New York",
+      "age": 30,
+      "description": "Consectetur adipiscing elit"
+    },
+    {
+      "id": 17,
+      "name": "Nova",
+      "location": "Los Angeles",
+      "age": 27,
+      "description": "Sed do eiusmod tempor incididunt"
+    },
+    {
+      "id": 18,
+      "name": "Vega",
+      "location": "Houston",
+      "age": 22,
+      "description": "Ut labore et dolore magna aliqua"
+    },
+    {
+      "id": 19,
+      "name": "Sirius",
+      "location": "Miami",
+      "age": 29,
+      "description": "Ut enim ad minim veniam"
+    },
+    {
+      "id": 20,
+      "name": "Altair",
+      "location": "San Francisco",
+      "age": 26,
+      "description": "Duis aute irure dolor in reprehenderit"
     }
 */

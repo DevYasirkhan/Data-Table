@@ -4,12 +4,14 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
+    "start": "concurrently \"npm run serve-json\" \"vite\"",
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
     "serve-json": "json-server --watch data.json --port 3000"
   },
   "devDependencies": {
+    "concurrently": "^9.1.2",
     "sass": "^1.85.1",
     "vite": "^6.2.0"
   },
