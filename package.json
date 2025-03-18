@@ -16,6 +16,7 @@
     "vite": "^6.2.0"
   },
   "dependencies": {
-    "json-server": "^0.17.0"
+    "json-server": "^0.17.0",
+    "zod": "^3.24.2"
   }
 }

@@ -3,18 +3,62 @@
 ////////////////////////////////////////////
 // Import
 import { DataTable } from './dataTable.js';
+import { z } from 'zod';
 
 ////////////////////////////////////////////
 // Selector
 const tableBox = document.querySelector('.table');
 const popup = document.querySelector('.popup-clear');
+const searchInput = document.querySelector('.input__search');
+
+// Form inputs
+const form = document.querySelector('.form');
+const id = document.querySelector('.form__group-input-id');
+const uName = document.querySelector('.form__group-input-name');
+const location = document.querySelector('.form__group-input-location');
+const age = document.querySelector('.form__group-input-age');
+const description = document.querySelector('.form__group-input-description');
 /*
 const filter = document.querySelector('.header__wrap-filter');
-const searchInput = document.querySelector('.input__search');
 const btnAddCustomer = document.querySelector('.btn-add');
 const btnSort = document.querySelector('.fa-sort');
-
 */
+
+////////////////////////////////////////////
+// Define Zod schema
+const formSchema = z.object({
+  id: z.coerce.number().positive('ID must be a positive number'),
+  uName: z.string().min(3, 'Name must be at least 3 characters long'),
+  location: z.string().min(2, 'Location must be at least 2 characters'),
+  age: z.coerce
+    .number()
+    .min(18, 'Age must be at least 18')
+    .max(100, 'Age must be less than 100'),
+  description: z
+    .string()
+    .min(10, 'Description must be at least 10 characters')
+    .max(200, 'Description must be under 200 characters'),
+});
+
+// Display errors below inputs
+function showErrors(errors) {
+  document
+    .querySelectorAll('.form__error')
+    .forEach(el => (el.textContent = ''));
+
+  console.log(errors);
+
+  errors.forEach(err => {
+    const fieldName = err.path[0];
+    const errorEl = document.querySelector(`.form__error-${fieldName}`);
+
+    console.log(errorEl);
+
+    if (errorEl) {
+      errorEl.textContent = err.message;
+    }
+  });
+}
 
 ////////////////////////////////////////////
 const options = {
@@ -29,7 +73,7 @@ const options = {
     {
       heading: 'Actions',
       customCell: row => `
-          <button onclick="editRow(${row.id})" class="btn-edit">Edit</button>
+          <button class="btn-edit" data-id="${row.id}" class="btn-edit">Edit</button>
           <button class="btn-delete" data-id="${row.id}">Delete</button>
         `,
     },
@@ -37,7 +81,6 @@ const options = {
 };
 
 const table = new DataTable('.table', options);
-console.log(table);
 
 ////////////////////////////////////////////
 // AdEventListener
@@ -51,7 +94,6 @@ tableBox.addEventListener('click', function (e) {
     popup.style.pointerEvents = 'auto';
 
     popup.removeEventListener('click', popupHandler);
-
     popupHandler = e => {
       if (e.target.classList.contains('btn-clear')) {
         table.clearAll();
@@ -60,7 +102,6 @@ tableBox.addEventListener('click', function (e) {
       popup.style.pointerEvents = 'none';
       target.checked = false;
     };
-
     popup.addEventListener('click', popupHandler);
   }
 
@@ -68,6 +109,78 @@ tableBox.addEventListener('click', function (e) {
     const id = +target.dataset.id;
     table.deleteRow(id);
   }
+
+  // Form Validation
+  if (target.classList.contains('btn-edit')) {
+    // Show form
+    form.style.opacity = 1;
+    form.style.pointerEvents = 'auto';
+
+    // Get row data
+    const targetRow = target.closest('.table-body__row');
+
+    // Extract old values
+    const oldId = targetRow.querySelector(
+      '.table-body__column-1 span'
+    ).textContent;
+    const oldName = targetRow.querySelector(
+      '.table-body__column-2'
+    ).textContent;
+    const oldLocation = targetRow.querySelector(
+      '.table-body__column-3'
+    ).textContent;
+    const oldAge = targetRow.querySelector('.table-body__column-4').textContent;
+    const oldDescription = targetRow.querySelector(
+      '.table-body__column-5'
+    ).textContent;
+
+    // Add old values to form for update
+    id.value = oldId;
+    uName.value = oldName;
+    location.value = oldLocation;
+    age.value = oldAge;
+    description.value = oldDescription;
+  }
+});
+
+// form.removeEventListener('submit', handleSubmit);
+function handleSubmit(event) {
+  event.preventDefault();
+
+  // Get updated values
+  const updatedData = {
+    id: +id.value.trim(),
+    name: uName?.value.trim(),
+    location: location.value.trim(),
+    age: +age.value.trim(),
+    description: description.value.trim(),
+  };
+  console.log(updatedData);
+
+  // Validation
+  const validationResult = formSchema.safeParse(updatedData);
+
+  if (!validationResult.success) {
+    showErrors(validationResult.error.errors);
+    console.error(validationResult.error.errors[0]);
+    return;
+  }
+
+  showErrors([]);
+
+  table.editRow(updatedData, rowIndex);
+
+  form.style.opacity = 0;
+  form.style.pointerEvents = 'none';
+  form.reset();
+}
+form.addEventListener('submit', handleSubmit);
+
+searchInput.addEventListener('input', function (e) {
+  const inputKeyword = searchInput.value.toLowerCase();
+  console.log(inputKeyword);
+
+  table.searchData(inputKeyword);
 });
 
 ////////////////////////////////////////////

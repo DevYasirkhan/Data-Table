@@ -1,6 +1,5 @@
 ////////////////////////////////////////////
 // Class
-
 export class DataTable {
   options = null;
   data = [];
@@ -11,48 +10,35 @@ export class DataTable {
   #isFiltering = false;
   #filteredQuery = '';
   #sortOrder = null;
+  params = new URLSearchParams();
 
   constructor(selector, options) {
     this.table = document.querySelector(selector);
     this.options = options;
 
+    this.params.append('_page', 1);
+    this.params.append('_limit', this.options?.pagination?.perPage || 10);
+
     this.fetchData();
-    this.fetchPaginateData();
-    this.table.addEventListener('click', this.pagination.bind(this));
+    this.table.addEventListener('click', this.handleTableEvent.bind(this));
+    this.table.addEventListener('click', this.sortData.bind(this));
   }
 
   // Fetch Data
   async fetchData() {
     try {
-      let response = await fetch(`${this.options.api}`);
+      let response = await fetch(`${this.options.api}?${this.params}`);
 
       if (!response.ok) throw new Error('Data not fetched. Please try again!');
 
       const data = await response.json();
       this.data = data;
-      this.#totalItems = data.length;
-    } catch (error) {
-      this.showError(error.message);
-    }
-  }
 
-  // Fetch paginate Data
-  async fetchPaginateData() {
-    try {
-      const response = await fetch(
-        `${this.options.api}?_page=${this.#currentPage}&_limit=${
-          this.options.pagination.perPage
-        }`
-      );
-
-      if (!response.ok) throw new Error('Data not fetched. Please try again!');
-
-      const data = await response.json();
+      this.#totalItems = +response.headers.get('X-Total-Count') || 0;
 
       this.updatePagination();
       this.renderData(data);
     } catch (error) {
-      console.log(error.message);
       this.showError(error.message);
     }
   }
@@ -118,21 +104,6 @@ export class DataTable {
     } of ${this.#totalItems}</td>
 
             <td class="table-foot__right">
-              <button class="btn-dropdown">
-                Rows per page: <span>10</span>
-                <i class="fa-solid fa-chevron-down"></i>
-              </button>
-
-              <!-- Action -->
-              <div class="table-foot__right-list">
-                <div class="table-foot__right-inner-list">
-                  <button>9</button>
-                  <button>15</button>
-                  <button>20</button>
-                  <button>25</button>
-                </div>
-              </div>
-
               <div class="table-foot__right-pages">
                 <button class="btn-left" data-index="1">
                   <i class="fa-solid fa-chevron-left"></i>
@@ -149,29 +120,16 @@ export class DataTable {
     tableBody.insertAdjacentHTML('beforeend', html);
   }
 
-  /*
   // Search Data
-  async searchData() {
+  async searchData(key) {
     try {
-      const keyWord = searchInput.value.toLowerCase();
+      const keyWord = key;
 
-      if (keyWord === '') {
-        this.fetchData();
-        return;
-      }
-
-      const response = await fetch(`${this.options.api}items?q=${keyWord}`);
-
-      if (!response.ok) throw new Error('Error fetching item');
-
-      this.data = await response.json();
-
-      this.renderData();
+      this.updateParams(params => ({ ...params, q: keyWord }));
     } catch (error) {
-      this.#showError(error.message);
+      this.showError(error.message);
     }
   }
- */
 
   /*
   // Add Data
@@ -211,7 +169,7 @@ export class DataTable {
         if (e.target.classList.contains('form__close-button')) {
           form.style.display = 'none';
         }
-      };
+          };
 
       // Add event listener
       form.addEventListener('click', this.formClickHandler);
@@ -221,28 +179,42 @@ export class DataTable {
   }
  */
 
+  // Update params
+  updateParams(cb) {
+    // convert url params to object
+    const paramsToObj = Object.fromEntries(this.params);
+
+    // pass params as object to callback function to be modified
+    const updatedParam = cb(paramsToObj);
+    console.log(updatedParam);
+
+    // after params being updated convert back to params data type and set it on the class
+    this.params = new URLSearchParams(updatedParam);
+
+    // refetch data to apply new filter based on params
+    this.fetchData();
+  }
+
   // Pagination Data
-  async pagination(e) {
+  async handleTableEvent(e) {
     try {
-      const target = e.target.closest('.btn-right, .btn-left');
+      const target = e.target;
+      const nextPageButton = target.closest('.btn-right');
+      const prevPageButton = target.closest('.btn-left');
+
+      const perPage = this.options.pagination.perPage;
+      const totalPages = Math.ceil(this.#totalItems / perPage);
 
       if (!target) return;
 
-      const perPage = this.options.pagination.perPage;
-      const totalPages = Math.ceil(this.data.length / perPage);
-
-      if (
-        target.classList.contains('btn-right') &&
-        this.#currentPage < totalPages
-      ) {
+      if (nextPageButton && this.#currentPage < totalPages) {
+        this.updateParams(params => ({ ...params, _page: +params._page + 1 }));
         this.#currentPage++;
       }
-      if (target.classList.contains('btn-left') && this.#currentPage > 1) {
+      if (prevPageButton && this.#currentPage > 1) {
+        this.updateParams(params => ({ ...params, _page: +params._page - 1 }));
         this.#currentPage--;
       }
-
-      this.fetchPaginateData();
-      this.updatePagination();
     } catch (error) {
       this.showError(error.message);
     }
@@ -258,39 +230,29 @@ export class DataTable {
     this.#perPageEnd = end;
   }
 
-  /*
-  // DropDown
-  dropDown(e) {
-    const target = e.target.closest('.pagination-right__pages');
-    if (target.classList.contains('pagination-right__pages')) {
-      perPageList.classList.toggle('active');
-    }
-
-    perPageList.addEventListener('click', e => {
-      const pageNum = +e.target.closest('button').textContent;
-
-      this.options.pagination.perPage = pageNum;
-
-      this.fetchData();
-      perPageList.classList.remove('active');
-    });
-  }
-  */
-
-  /*
-   // Sort Data
+  // Sort Data
   async sortData(e) {
     try {
-      if (!e.target.classList.contains('fa-sort')) return;
+      const target = e.target;
+      console.log(target.classList.contains('table-head__column-3'));
+
+      // if (!target.classList.contains('fa-sort')) return;
+      if (!target.classList.contains('fa-sort')) return;
+      console.log(target);
 
       this.#sortOrder = this.#sortOrder === 'desc' ? 'asc' : 'desc';
 
-      this.fetchData();
+      this.updateParams(params => ({
+        ...params,
+        _sort: 'id',
+        _order: this.#sortOrder,
+      }));
+
+      console.log(this.params.toString());
     } catch (error) {
       this.showError(error.message);
     }
   }
- */
 
   /*
   // Filter Data
@@ -309,53 +271,25 @@ export class DataTable {
   }
  */
 
-  /*
   // Edit Data
-  async editRow(target) {
+  async editRow(dataObject, rowIndex) {
     try {
-      form.style.display = 'block';
-
-      // Get row data
-      const dataRow = target;
-      const dataIndex = dataRow.dataset.index;
-
-      // Extract old values
-      const oldName = dataRow
-        .querySelector('.data-row__cell-1')
-        .textContent.trim();
-      const oldLocation = dataRow
-        .querySelector('.data-row__cell-2')
-        .textContent.trim();
-      const oldAge = dataRow
-        .querySelector('.data-row__cell-3')
-        .textContent.trim();
-      const oldDescription = dataRow
-        .querySelector('.data-row__cell-4')
-        .textContent.trim();
-
-      // Get updated values
-      const updatedData = {
-        id: id.value.trim(),
-        name: uname.value.trim(),
-        location: location.value.trim(),
-        age: age.value.trim(),
-        description: description.value.trim(),
-      };
-
-      const response = await fetch(`${this.options.api}items/${dataIndex}`, {
+      const response = await fetch(`${this.options.api}/${rowIndex}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(updatedData),
+        body: JSON.stringify(dataObject),
       });
 
       if (!response.ok) throw new Error('Error updating item');
+
       const data = await response.json();
-      // this.fetchData();
+      console.log(data);
+
+      this.fetchData();
     } catch (error) {
       this.showError(error.message);
     }
   }
-*/
 
   // Delete Row
   async deleteRow(id, skipFetch = false) {
@@ -378,13 +312,14 @@ export class DataTable {
   // Clear All Rows
   async clearAll() {
     try {
-      const itemsId = this.data.map(item => item.id);
+      const itemsId = [...Array(this.#totalItems)].map((_, i) => i + 1);
+      console.log(itemsId);
 
       const result = await Promise.all(
         itemsId.map(id => this.deleteRow(id, true))
       );
 
-      this.fetchPaginateData();
+      this.getParams();
     } catch (error) {
       console.log(error.message);
     }

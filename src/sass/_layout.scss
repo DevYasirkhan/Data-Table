@@ -270,6 +270,44 @@
 }
 
 ///////////////////////////////////////
+// Table Form
+.form {
+  background-color: $color-white;
+  box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.15);
+  width: 220px;
+  padding: 12px;
+  border-radius: 4px;
+  position: absolute;
+  top: 20%;
+  left: 50%;
+  transform: translateX(-50%);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+
+  &__group {
+    margin-bottom: 6px;
+
+    &-label {
+      font-size: 14px;
+      font-weight: 500;
+      display: block;
+    }
+
+    &-input {
+      font-size: 14px;
+      padding: 4px;
+      width: 100%;
+    }
+  }
+
+  &__error {
+    font-size: 12px;
+    color: $color-negative;
+  }
+}
+
+///////////////////////////////////////
 // Media Query
 @media only screen and (max-width: 1400px) {
   .container {
