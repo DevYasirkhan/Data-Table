@@ -80,7 +80,7 @@
       padding: 12px 22px 12px 10px;
 
       display: grid;
-      grid-template-columns: 80px 1fr 1fr 1fr 200px 100px;
+      grid-template-columns: 80px 1fr 1fr 1fr 1fr 160px 100px;
       gap: 20px;
       align-items: center;
     }
@@ -114,13 +114,13 @@
   .table-body {
     // display: block;
     flex-grow: 1;
-    overflow-y: scroll;
+    overflow: scroll;
 
     &__row {
       font-size: 14px;
       padding: 12px 10px;
       display: grid;
-      grid-template-columns: 80px 1fr 1fr 1fr 200px 100px;
+      grid-template-columns: 80px 1fr 1fr 1fr 1fr 160px 100px;
       align-items: center;
       gap: 20px;
     }
@@ -128,6 +128,16 @@
     &__column-1 {
       display: flex;
       align-items: center;
+    }
+
+    .status-active {
+      color: $color-positive;
+    }
+    .status-pending {
+      color: $color-info;
+    }
+    .status-canceled {
+      color: $color-negative;
     }
 
     &__checkbox {
@@ -368,7 +378,7 @@
         padding: 10px 20px 10px 8px;
 
         display: grid;
-        grid-template-columns: 30px 1fr 1fr 1fr 160px 100px;
+        grid-template-columns: 30px 1fr 1fr 1fr 1fr 160px 100px;
         margin-bottom: 6px;
       }
 
@@ -385,7 +395,7 @@
         padding: 8px 8px;
 
         display: grid;
-        grid-template-columns: 30px 1fr 1fr 1fr 160px 100px;
+        grid-template-columns: 30px 1fr 1fr 1fr 1fr 160px 100px;
       }
 
       &__checkbox {
@@ -424,7 +434,7 @@
 
       &__row {
         display: grid;
-        grid-template-columns: 30px 70px 80px 60px 100px;
+        grid-template-columns: 30px 70px 80px 60px 100px 120px;
       }
     }
     .table-body {
@@ -432,7 +442,7 @@
 
       &__row {
         display: grid;
-        grid-template-columns: 30px 70px 80px 60px 140px 100px;
+        grid-template-columns: 30px 70px 80px 60px 100px 120px 100px;
       }
       &__column-3 {
         margin-right: 20px;

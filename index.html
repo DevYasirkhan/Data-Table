@@ -23,12 +23,11 @@
         <!-- Top header -->
         <div class="header__wrap">
           <div class="header__wrap-input">
-            <select name="" id="" class="header__wrap-filter">
-              <option value="" selected disabled>Filter</option>
-              <option value="20">20</option>
-              <option value="30">30</option>
-              <option value="40">40</option>
-              <option value="50">50</option>
+            <select name="filter" class="header__wrap-filter">
+              <option value="" disabled selected>Filter</option>
+              <option value="active">active</option>
+              <option value="pending">pending</option>
+              <option value="canceled">canceled</option>
             </select>
 
             <div class="input">
@@ -132,7 +131,7 @@
 
       <!-- Table Form -->
       <form class="form">
-        <div class="form__group">
+        <!-- <div class="form__group">
           <label for="id" class="form__group-label">ID</label>
           <input
             type="number"
@@ -143,13 +142,12 @@
             placeholder="ID"
           />
           <p class="form__error form__error-id"></p>
-        </div>
+        </div> -->
         <div class="form__group">
           <label for="name" class="form__group-label">Name</label>
           <input
             type="text"
             id="name"
-            value="name"
             name="name"
             class="form__group-input form__group-input-name"
             placeholder="Name"
@@ -161,7 +159,6 @@
           <input
             type="text"
             id="location"
-            value="location"
             name="location"
             class="form__group-input form__group-input-location"
             placeholder="Location"
@@ -173,7 +170,6 @@
           <input
             type="number"
             id="age"
-            value="25"
             name="age"
             class="form__group-input form__group-input-age"
             placeholder="Age"

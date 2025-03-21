@@ -7,9 +7,8 @@ export class DataTable {
   #totalItems = 0;
   #PerPageStart = 0;
   #perPageEnd = 0;
-  #isFiltering = false;
-  #filteredQuery = '';
   #sortOrder = null;
+  #filteredValue = '';
   params = new URLSearchParams();
 
   constructor(selector, options) {
@@ -81,15 +80,18 @@ export class DataTable {
             </td>
             ${this.options.columns
               .slice(1)
-              .map(
-                (col, colIndex) =>
-                  `<td class="table-body__column table-body__column-${
-                    colIndex + 2
-                  }">${
-                    col.customCell
-                      ? col.customCell(row)
-                      : row[col.accessor] || ''
-                  }</td>`
+              .map((col, colIndex) =>
+                col.accessor === 'status'
+                  ? `<td class="table-body__column table-body__column-${
+                      colIndex + 2
+                    } status-${row.status}">${row.status}</td>`
+                  : `<td class="table-body__column table-body__column-${
+                      colIndex + 2
+                    }">${
+                      col.customCell
+                        ? col.customCell(row)
+                        : row[col.accessor] || ''
+                    }</td>`
               )
               .join('')}
           </tr>`
@@ -131,53 +133,22 @@ export class DataTable {
     }
   }
 
-  /*
   // Add Data
-  async addCustomer(e) {
+  async addCustomer(newData) {
     try {
-      form.style.display = 'block';
+      const response = await fetch(this.options.api, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(newData),
+      });
 
-      // Remove event listener
-      form.removeEventListener('click', this.formClickHandler);
+      if (!response.ok) throw new Error('Data not added please try again!');
 
-      this.formClickHandler = async e => {
-        e.preventDefault();
-
-        if (e.target.classList.contains('form__button')) {
-          form.style.display = 'none';
-
-          const addNewData = {
-            id: +id.value.trim(),
-            name: uname.value.trim(),
-            location: location.value.trim(),
-            age: +age.value.trim(),
-            description: description.value.trim(),
-          };
-
-          const response = await fetch(`${this.options.api}items`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(addNewData),
-          });
-
-          if (!response.ok) throw new Error('Error Adding data');
-
-          await response.json();
-          this.fetchData();
-        }
-
-        if (e.target.classList.contains('form__close-button')) {
-          form.style.display = 'none';
-        }
-          };
-
-      // Add event listener
-      form.addEventListener('click', this.formClickHandler);
+      this.fetchData();
     } catch (error) {
       this.showError(error.message);
     }
   }
- */
 
   // Update params
   updateParams(cb) {
@@ -186,7 +157,6 @@ export class DataTable {
 
     // pass params as object to callback function to be modified
     const updatedParam = cb(paramsToObj);
-    console.log(updatedParam);
 
     // after params being updated convert back to params data type and set it on the class
     this.params = new URLSearchParams(updatedParam);
@@ -205,15 +175,18 @@ export class DataTable {
       const perPage = this.options.pagination.perPage;
       const totalPages = Math.ceil(this.#totalItems / perPage);
 
-      if (!target) return;
-
-      if (nextPageButton && this.#currentPage < totalPages) {
-        this.updateParams(params => ({ ...params, _page: +params._page + 1 }));
-        this.#currentPage++;
+      if (nextPageButton) {
+        this.updateParams(params => ({
+          ...params,
+          _page: Math.min(+params._page + 1, totalPages),
+        }));
       }
-      if (prevPageButton && this.#currentPage > 1) {
-        this.updateParams(params => ({ ...params, _page: +params._page - 1 }));
-        this.#currentPage--;
+
+      if (prevPageButton) {
+        this.updateParams(params => ({
+          ...params,
+          _page: Math.max(+params._page - 1, 1),
+        }));
       }
     } catch (error) {
       this.showError(error.message);
@@ -234,11 +207,8 @@ export class DataTable {
   async sortData(e) {
     try {
       const target = e.target;
-      console.log(target.classList.contains('table-head__column-3'));
 
-      // if (!target.classList.contains('fa-sort')) return;
       if (!target.classList.contains('fa-sort')) return;
-      console.log(target);
 
       this.#sortOrder = this.#sortOrder === 'desc' ? 'asc' : 'desc';
 
@@ -247,29 +217,20 @@ export class DataTable {
         _sort: 'id',
         _order: this.#sortOrder,
       }));
-
-      console.log(this.params.toString());
     } catch (error) {
       this.showError(error.message);
     }
   }
 
-  /*
   // Filter Data
-  async #filterData(e) {
+  async filterData(value) {
     try {
-      const targetNum = +e.target.value;
-
-      this.#isFiltering = true;
-      this.#filteredQuery = targetNum;
-      this.#currentPage = 1;
-
-      await this.fetchData();
+      this.#filteredValue = 'all';
+      this.updateParams(params => ({ ...params, status: value }));
     } catch (error) {
-      this.#showError(error.message);
+      this.showError(error.message);
     }
   }
- */
 
   // Edit Data
   async editRow(dataObject, rowIndex) {
@@ -281,9 +242,6 @@ export class DataTable {
       });
 
       if (!response.ok) throw new Error('Error updating item');
-
-      const data = await response.json();
-      console.log(data);
 
       this.fetchData();
     } catch (error) {
@@ -299,10 +257,10 @@ export class DataTable {
       });
 
       if (!response.ok)
-        throw new Error('failed to delete items. Please try again');
+        throw new Error('failed to delete item. Please try again');
 
       if (!skipFetch) {
-        await this.fetchPaginateData();
+        await this.fetchData();
       }
     } catch (error) {
       this.showError(error.message);
@@ -313,15 +271,15 @@ export class DataTable {
   async clearAll() {
     try {
       const itemsId = [...Array(this.#totalItems)].map((_, i) => i + 1);
-      console.log(itemsId);
 
       const result = await Promise.all(
         itemsId.map(id => this.deleteRow(id, true))
       );
+      console.log(result);
 
-      this.getParams();
+      await this.fetchData();
     } catch (error) {
-      console.log(error.message);
+      this.showError(error.message);
     }
   }
 
