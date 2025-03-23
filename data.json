@@ -183,6 +183,38 @@
       "age": 52,
       "status": "pending",
       "description": "Magician man"
+    },
+    {
+      "name": "Thomas",
+      "location": "Italy",
+      "age": 24,
+      "status": "canceled",
+      "description": "Works in hotel",
+      "id": 24
+    },
+    {
+      "name": "Alan",
+      "location": "Amarica",
+      "age": 60,
+      "status": "active",
+      "description": "Good person",
+      "id": 25
+    },
+    {
+      "name": "Jonas Schdetmann",
+      "location": "Portugal",
+      "age": 50,
+      "status": "active",
+      "description": "A great teacher",
+      "id": 26
+    },
+    {
+      "name": "rabbit",
+      "location": "Scotland",
+      "age": 23,
+      "status": "active",
+      "description": "A cute rabbit 💖",
+      "id": 27
     }
   ]
 }

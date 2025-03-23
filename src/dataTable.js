@@ -8,6 +8,7 @@ export class DataTable {
   #PerPageStart = 0;
   #perPageEnd = 0;
   #sortOrder = null;
+  #sortColumnIndex;
   #filteredValue = '';
   params = new URLSearchParams();
 
@@ -52,17 +53,41 @@ export class DataTable {
     const html = `
          <thead class="table-head">
           <tr class="table-head__row">
-            <th class="table-head__column table-head__column-1">
+            <th class="table-head__column table-head__column-1" data-index="${1}">
               <input type="checkbox" class="table-head__checkbox" />
-              <i class="fa-solid fa-sort"></i>
+               <button class="table-head__sort-icon">
+              <i class="fa-solid fa-sort-up ${
+                this.#sortColumnIndex == 1 && this.#sortOrder === 'asc'
+                  ? 'active-sort'
+                  : 'select'
+              }"></i>
+              <i class="fa-solid fa-sort-down ${
+                this.#sortColumnIndex == 1 && this.#sortOrder === 'desc'
+                  ? 'active-sort'
+                  : 'select'
+              }"></i>
+            </button>
             </th>
             ${this.options.columns
               .slice(1, -1)
               .map(
                 (col, i) => `    
-              <th class="table-head__column table-head__column-${i + 2}">
+              <th class="table-head__column table-head__column-${
+                i + 2
+              }" data-index="${i + 2}">
               <span>${col.heading}</span>
-              <i class="fa-solid fa-sort"></i>
+              <button class="table-head__sort-icon">
+              <i class="fa-solid fa-sort-up ${
+                this.#sortColumnIndex == i + 2 && this.#sortOrder === 'asc'
+                  ? 'active-sort'
+                  : ''
+              }"></i>
+              <i class="fa-solid fa-sort-down ${
+                this.#sortColumnIndex == i + 2 && this.#sortOrder === 'desc'
+                  ? 'active-sort'
+                  : ''
+              }"></i>
+            </button>
             </th>`
               )
               .join('')}
@@ -134,7 +159,7 @@ export class DataTable {
   }
 
   // Add Data
-  async addCustomer(newData) {
+  async addRow(newData) {
     try {
       const response = await fetch(this.options.api, {
         method: 'POST',
@@ -206,15 +231,21 @@ export class DataTable {
   // Sort Data
   async sortData(e) {
     try {
-      const target = e.target;
+      const target = e.target.closest('.table-head__column');
 
-      if (!target.classList.contains('fa-sort')) return;
+      const targetText = target?.textContent.toLowerCase().trim();
+
+      const columnIndex = target?.dataset.index;
+
+      if (!target?.classList.contains('table-head__column')) return;
 
       this.#sortOrder = this.#sortOrder === 'desc' ? 'asc' : 'desc';
 
+      this.#sortColumnIndex = columnIndex;
+
       this.updateParams(params => ({
         ...params,
-        _sort: 'id',
+        _sort: `${targetText ? targetText : 'id'}`,
         _order: this.#sortOrder,
       }));
     } catch (error) {

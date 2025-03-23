@@ -10,21 +10,20 @@ import { z } from 'zod';
 const tableBox = document.querySelector('.table');
 const popup = document.querySelector('.popup-clear');
 const searchInput = document.querySelector('.input__search');
-const btnAddCustomer = document.querySelector('.btn-add');
+const btnAddRow = document.querySelector('.btn-add');
 const btnFilter = document.querySelector('.header__wrap-filter');
 
 // Form inputs
 const form = document.querySelector('.form');
-const id = document.querySelector('.form__group-input-id');
 const uName = document.querySelector('.form__group-input-name');
 const location = document.querySelector('.form__group-input-location');
 const age = document.querySelector('.form__group-input-age');
+const status = document.querySelector('.form__group-input-select');
 const description = document.querySelector('.form__group-input-description');
 
 ////////////////////////////////////////////
 // Define Zod schema
 const formSchema = z.object({
-  // id: z.coerce.number().positive('ID must be a positive number'),
   uName: z.coerce
     .string()
     .trim()
@@ -37,6 +36,7 @@ const formSchema = z.object({
     .number()
     .min(18, 'Age must be at least 18')
     .max(100, 'Age must be less than 100'),
+  select: z.coerce.string().trim().min(3, 'Select a valid value'),
   description: z.coerce
     .string()
     .trim()
@@ -115,89 +115,131 @@ tableBox.addEventListener('click', function (e) {
     const id = +target.dataset.id;
     table.deleteRow(id);
   }
-
-  // Form Validation
-  if (target.classList.contains('btn-edit')) {
-    form.style.opacity = 1;
-    form.style.pointerEvents = 'auto';
-
-    // Get row data
-    const targetRow = target.closest('.table-body__row');
-    const rowIndex = +targetRow.dataset.id;
-
-    // Add old values to form for update
-    // id.value = targetRow.querySelector(
-    //   '.table-body__column-1 span'
-    // ).textContent;
-    uName.value = targetRow.querySelector('.table-body__column-2').textContent;
-    location.value = targetRow.querySelector(
-      '.table-body__column-3'
-    ).textContent;
-    age.value = targetRow.querySelector('.table-body__column-4').textContent;
-    description.value = targetRow.querySelector(
-      '.table-body__column-5'
-    ).textContent;
-
-    form.removeEventListener('submit', handleSubmit);
-    function handleSubmit(event) {
-      event.preventDefault();
-
-      // Get updated values
-      const updatedData = {
-        // id: +id.value,
-        name: uName.value,
-        location: location.value,
-        age: +age.value,
-        description: description.value,
-      };
-
-      // Pass object for Validation
-      const validationResult = formSchema.safeParse(updatedData);
-
-      if (!validationResult.success) {
-        showErrors(validationResult.error.errors);
-        console.log(validationResult.error.errors);
-        return;
-      }
-
-      showErrors([]);
-
-      table.editRow(updatedData, rowIndex);
-
-      form.style.opacity = 0;
-      form.style.pointerEvents = 'none';
-      form.reset();
-    }
-    form.addEventListener('submit', handleSubmit);
-  }
 });
 
-// Add customer
-btnAddCustomer.addEventListener('click', e => {
-  e.preventDefault();
+////////////////////////////////////////////
+// Handle clicking "Edit" button
+let currentRowIndex = null;
+let currentTarget = null;
+
+function handleEdit(e) {
+  const target = e.target;
+  if (!target.classList.contains('btn-edit')) return;
+
+  currentTarget = target;
+
   form.style.opacity = 1;
   form.style.pointerEvents = 'auto';
 
-  form.removeEventListener('submit', handleSubmit);
-  function handleSubmit(event) {
-    event.preventDefault();
+  // Get row data
+  const targetRow = target.closest('.table-body__row');
+  currentRowIndex = +targetRow.dataset.id;
 
-    const newData = {
-      name: uName.value,
-      location: location.value,
-      age: +age.value,
-      description: description.value,
-    };
+  // Fill form with existing values
+  uName.value = targetRow.querySelector('.table-body__column-2').textContent;
+  location.value = targetRow.querySelector('.table-body__column-3').textContent;
+  age.value = targetRow.querySelector('.table-body__column-4').textContent;
+  status.value = targetRow.querySelector('.table-body__column-5').textContent;
+  description.value = targetRow.querySelector(
+    '.table-body__column-6'
+  ).textContent;
 
-    table.addCustomer(newData);
+  showErrors([]);
+}
 
-    form.style.opacity = 0;
-    form.style.pointerEvents = 'none';
+function handleEditSubmit(event) {
+  event.preventDefault();
+
+  if (!currentTarget.classList.contains('btn-edit')) return;
+
+  // Get updated values
+  const updatedData = {
+    name: uName.value,
+    location: location.value,
+    age: +age.value,
+    status: status.value,
+    description: description.value,
+  };
+
+  // Validate data
+  const validationResult = formSchema.safeParse(updatedData);
+  if (!validationResult.success) {
+    showErrors(validationResult.error.errors);
+    return;
   }
-  form.addEventListener('submit', handleSubmit);
-});
 
+  showErrors([]);
+
+  table.editRow(updatedData, currentRowIndex);
+  closeForm();
+}
+
+function closeForm() {
+  form.style.opacity = 0;
+  form.style.pointerEvents = 'none';
+
+  uName.value =
+    location.value =
+    age.value =
+    status.value =
+    description.value =
+      '';
+  currentRowIndex = null;
+}
+
+tableBox.addEventListener('click', handleEdit);
+form.addEventListener('submit', handleEditSubmit);
+
+////////////////////////////////////////////
+// Add New Row
+
+function handleAddRow(e) {
+  form.style.opacity = 1;
+  form.style.pointerEvents = 'auto';
+
+  const target = e.target;
+  if (!target.classList.contains('btn-add')) return;
+
+  currentTarget = target;
+
+  showErrors([]);
+}
+
+function handleAddSubmit(event) {
+  event.preventDefault();
+
+  if (!currentTarget.classList.contains('btn-add')) return;
+
+  const newData = {
+    name: uName.value,
+    location: location.value,
+    age: +age.value,
+    status: status.value,
+    description: description.value,
+  };
+  console.log(newData);
+
+  const validationResult = formSchema.safeParse(newData);
+
+  console.log(validationResult.success);
+  if (!validationResult.success) {
+    showErrors(validationResult.error.errors);
+    return;
+  }
+
+  showErrors([]);
+
+  table.addRow(newData);
+  closeForm();
+}
+
+btnAddRow.addEventListener('click', handleAddRow);
+form.addEventListener('submit', handleAddSubmit);
+form.querySelector('.fa-xmark').addEventListener('click', closeForm);
+
+////////////////////////////////////////////
 // FIltering
+
 btnFilter.addEventListener('change', function () {
   const filterValue = this.value;
   table.filterData(filterValue);
